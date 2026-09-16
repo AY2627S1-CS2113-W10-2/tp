@@ -1,6 +1,6 @@
-# Duke project template
+# ClubFlow project
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+This is a project template for a greenfield Java project. It's named after the Java mascot _ClubFlow_. Given below are instructions on how to use it.
 
 ## Setting up in Intellij
 
@@ -8,13 +8,13 @@ Prerequisites: JDK 25 (use the exact version), update Intellij to the most recen
 
 1. **Ensure Intellij JDK 25 is defined as an SDK**, as described [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) -- this step is not needed if you have used JDK 25 in a previous Intellij project.
 1. **Import the project _as a Gradle project_**, as described [here](https://se-education.org/guides/tutorials/intellijImportGradleProject.html).
-1. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/duke/Duke.java` file, right-click it, and choose `Run Duke.main()`. If the setup is correct, you should see something like the below:
+1. **Verify the setup**: After the importing is complete, locate the `src/main/java/seedu/ClubFlow/ClubFlow.java` file, right-click it, and choose `Run ClubFlow.main()`. If the setup is correct, you should see something like the below:
    ```
    > Task :compileJava
    > Task :processResources NO-SOURCE
    > Task :classes
    
-   > Task :Duke.main()
+   > Task :ClubFlow.main()
    Hello from
     ____        _
    |  _ \ _   _| | _____ 
@@ -41,7 +41,7 @@ Prerequisites: JDK 25 (use the exact version), update Intellij to the most recen
 
 ### JUnit tests
 
-* A skeleton JUnit test (`src/test/java/seedu/duke/DukeTest.java`) is provided with this project template. 
+* A skeleton JUnit test (`src/test/java/seedu/ClubFlow/ClubFlowTest.java`) is provided with this project template. 
 * If you are new to JUnit, refer to the [JUnit Tutorial at se-education.org/guides](https://se-education.org/guides/tutorials/junit.html).
 
 ## Checkstyle
