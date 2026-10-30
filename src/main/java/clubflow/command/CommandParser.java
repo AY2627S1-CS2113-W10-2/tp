@@ -244,8 +244,8 @@ public class CommandParser {
         Set<String> flagArgIds = Set.of(command.flagArgIds());
         //@@author 77chenchen
         Set<String> repeatableArgIds = Set.of(command.repeatableArgIds());
-        //@@author
 
+        //@@author
         for (String strArg : strArgs) {
             String[] arg = parseArg(strArg, flagArgIds);
             String argId = arg[0];
@@ -257,7 +257,7 @@ public class CommandParser {
                     continue;
                 }
                 throw new CommandParseException("Multiple arguments start with \"" + argId + "/\".");
-                //@@author
+            //@@author
             }
             args.put(argId, arg[1]);
             argIds.add(argId);
@@ -303,8 +303,8 @@ public class CommandParser {
             }
             throw new CommandParseException("Argument \"" + strArg + "\" is not a valid flag.");
         }
-        //@@author
 
+        //@@author
         if (strArg.indexOf(SLASH_CHAR) == -1) {
             if (flagArgIds.contains(lowercaseArg)) {
                 return new String[]{lowercaseArg, ""};
@@ -394,6 +394,7 @@ public class CommandParser {
         return commands.containsKey(keyword.toLowerCase());
     }
 
+    //@@author Bryan-chua
     /**
      * Calculates the min number of single-character edits needed to transform one string
      * into another.
@@ -490,4 +491,5 @@ public class CommandParser {
 
         return Optional.of(registeredKeywords.get(bestKeyword) + remainder);
     }
+//@@author
 }

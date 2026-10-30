@@ -33,8 +33,8 @@ public class SaveLoadManager {
     /** Holds an assignment record until all members and events have been read. */
     private record PendingAssignment(String[] fields, int lineNumber) {
     }
-    //@@author
 
+    //@@author
     /** Creates a storage handler. */
     public SaveLoadManager() {
     }
@@ -50,6 +50,7 @@ public class SaveLoadManager {
     public void save(Club data, Path path) throws IOException {
         Objects.requireNonNull(data, "Club data must not be null");
         Objects.requireNonNull(path, "Save path must not be null");
+        //@@author Bryan-chua
         List<String> lines = new ArrayList<>();
 
         for (Member member : data.getMembers()) {
@@ -83,13 +84,14 @@ public class SaveLoadManager {
             lines.add(String.join("|", "ASSIGNMENT", assignment.getEvent().getTag(),
                     String.valueOf(memberIndex + 1), assignment.getRole()));
         }
-        //@@author
 
+        //@@author Bryan-chua
         Path parent = path.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
         }
         Files.write(path, lines, StandardCharsets.UTF_8);
+        //@@author
         LOGGER.info(() -> "Saved " + lines.size() + " records to " + path);
 
         savePhotos(path, data);
@@ -109,8 +111,8 @@ public class SaveLoadManager {
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         //@@author 77chenchen
         List<PendingAssignment> pendingAssignments = new ArrayList<>();
-        //@@author
 
+        //@@author
         for (int lineIndex = 0; lineIndex < lines.size(); lineIndex++) {
             String line = lines.get(lineIndex);
             int lineNumber = lineIndex + 1;
@@ -213,8 +215,8 @@ public class SaveLoadManager {
         }
         return -1;
     }
-    //@@author
 
+    //@@author
     /**
      * Creates a consistent, line-numbered exception without exposing record contents.
      *

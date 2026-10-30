@@ -28,12 +28,14 @@ final class EventArgumentValidator {
             throw new CommandParseException("An event tag must be provided after e/.");
         }
 
+        //@@author Bryan-chua
         for (String value : args.values()) {
             if (value.contains("|")) {
                 throw new CommandParseException("Fields cannot contain |.");
             }
         }
 
+        //@@author Eugene3129
         validateDate(args, EventArgumentIds.DATE, "Event date");
         validateDate(args, EventArgumentIds.DEADLINE, "Deadline");
         validateBudget(args);

@@ -21,6 +21,7 @@ class CommandCorrectionTest {
     private CommandParser parser;
     private UserInterface ui;
 
+    //@@author Bryan-chua
     @BeforeEach
     void setUp() {
         ui = new UserInterface("[TEST] ", "> ");
@@ -45,6 +46,7 @@ class CommandCorrectionTest {
                 parser.suggestedCorrection("  INVTE  e/\"Christmas  Party\"  "));
     }
 
+    //@@author
     @Test
     void suggestedCorrection_camelCaseKeyword_preservesRegisteredSpellingAndArguments() {
         parser.register("deleteEvent", new DeleteEventCommand(ui, new Club()));
@@ -58,6 +60,7 @@ class CommandCorrectionTest {
         );
     }
 
+    //@@author Bryan-chua
     @Test
     void suggestedCorrection_exactKeywordOrAlias_needsNoCorrection() {
         assertAll(
@@ -104,4 +107,5 @@ class CommandCorrectionTest {
 
         assertEquals(Optional.of("invite e/XMAS"), parser.suggestedCorrection("invate e/XMAS"));
     }
+//@@author
 }

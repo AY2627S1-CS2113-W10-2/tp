@@ -139,8 +139,8 @@ public class ClubFlow {
         parser.registerAlias("assignMember", "am");
         parser.register("unassignMember", new UnassignMemberCommand(ui, club));
         parser.registerAlias("unassignMember", "um");
-        //@@author
 
+        //@@author
         parser.register("addPhoto", new AddPhotoCommand(ui, club));
         parser.registerAlias("addPhoto", "ap");
 
@@ -211,6 +211,7 @@ public class ClubFlow {
         while (true) {
             try {
                 String input = ui.prompt();
+                //@@author Bryan-chua
                 Optional<String> suggestion = parser.suggestedCorrection(input);
 
                 if (suggestion.isPresent()) {
@@ -222,8 +223,10 @@ public class ClubFlow {
                     }
                     input = correctedInput;
                 }
+                //@@author
                 boolean terminate = parser.parse(input);
                 
+                //@@author Bryan-chua
                 if (club.hasUnsavedChanges()) {
                     try {
                         clubManager.saveActiveClub();
@@ -232,6 +235,7 @@ public class ClubFlow {
                         ui.print("Changes could not be saved: " + e.getMessage());
                     }
                 }
+                //@@author
                 if (terminate) {
                     LOGGER.info("ClubFlow exited normally");
                     break;

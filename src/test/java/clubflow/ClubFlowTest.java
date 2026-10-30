@@ -93,7 +93,7 @@ class ClubFlowTest {
         );
     }
 
-    //@@author
+    //@@author Bryan-chua
     @Test
     void run_saveCommand_reportsUnknownCommand() {
         String result = runSession("save\nexit\n");
@@ -346,8 +346,8 @@ class ClubFlowTest {
         assertTrue(secondSession.contains("Unassigned member Alicia from event PARTY."));
         assertTrue(new SaveLoadManager().load(testDirectory.resolve("clubs.cf")).getAssignments().isEmpty());
     }
-    //@@author Eugene3129
 
+    //@@author Bryan-chua
     @Test
     void run_correctedCommandConfirmed_executesOnceAndAutosaves() throws IOException {
         String result = runSession("creatEvent e/XMAS n/\"Christmas Party\"\n\nexit\n");
@@ -409,6 +409,7 @@ class ClubFlowTest {
         assertFalse(result.contains("Created event:"));
     }
 
+    //@@author Eugene3129
     @Test
     void main_exitInput_startsAndStopsWithAssertionsEnabled() {
         System.setIn(new ByteArrayInputStream("exit\n".getBytes(StandardCharsets.UTF_8)));

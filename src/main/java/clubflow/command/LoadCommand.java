@@ -44,6 +44,7 @@ public class LoadCommand extends Command {
         return new String[]{};
     }
 
+    //@@author Bryan-chua
     /**
      * Checks that the required {@code p/} argument names a valid relative path.
      *
@@ -66,6 +67,7 @@ public class LoadCommand extends Command {
         }
     }
 
+    //@@author
     /**
      * Replaces the shared club data only after the file has loaded successfully.
      *

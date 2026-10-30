@@ -11,8 +11,8 @@ import clubflow.UserInterface;
 import clubflow.exception.CommandParseException;
 import clubflow.member.Member;
 
-//@@author 77chenchen
 
+//@@author 77chenchen
 /**
  * Creates a club member and stores the member in the shared club data.
  */
@@ -76,6 +76,7 @@ public class CreateMemberCommand extends Command {
             throw new CommandParseException("A function must be provided after f/.");
         }
 
+        //@@author Bryan-chua
         for (String value : args.values()) {
             if (value.contains("|")) {
                 throw new CommandParseException("Fields cannot contain |.");
@@ -86,6 +87,7 @@ public class CreateMemberCommand extends Command {
                 throw new CommandParseException("Function names cannot contain commas.");
             }
         }
+    //@@author 77chenchen
     }
 
     @Override
@@ -104,5 +106,3 @@ public class CreateMemberCommand extends Command {
         return false;
     }
 }
-
-//@@author
