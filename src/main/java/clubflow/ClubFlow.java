@@ -54,9 +54,11 @@ public class ClubFlow {
     /** Records lifecycle events and unexpected failures for this class. */
     private static final Logger LOGGER = Logger.getLogger(ClubFlow.class.getName());
 
+    //@@author Bryan-chua
     /** File used for automatic loading and saving. */
     private static final Path DEFAULT_SAVE_PATH = Path.of("saves", "clubs", "default", "club.cf");
 
+    //@@author
     /** Terminal interface shared by the parser and commands. */
     private final UserInterface ui;
 
@@ -66,14 +68,17 @@ public class ClubFlow {
     /** In-memory store shared by all commands that manage club data. */
     private final Club club;
 
+    //@@author Bryan-chua
     /** Save file for this app instance; tests use temporary files. */
     private final Path savePath;
 
+    //@@author
     private final ClubManager clubManager;
     /**
      * Initializes the ClubFlow app.
      */
     public ClubFlow() {
+        //@@author Bryan-chua
         this(DEFAULT_SAVE_PATH);
     }
 
@@ -84,6 +89,7 @@ public class ClubFlow {
      */
     ClubFlow(Path savePath) {
         this.savePath = Objects.requireNonNull(savePath, "Save path must not be null");
+        //@@author
         ui = new UserInterface("[CF] ", "> ");
         parser = new CommandParser(ui);
         club = new Club();
@@ -159,10 +165,14 @@ public class ClubFlow {
         parser.register("listPhoto", new ListPhotoCommand(ui, club));
         parser.registerAlias("listPhoto", "lp");
 
+        //@@author Bryan-chua
         parser.register("load", new LoadCommand(ui, club));
+        //@@author
         parser.register("exit", new ExitCommand(ui));
+        //@@author Bryan-chua
         parser.register("invite", new InviteCommand(ui, club));
 
+        //@@author
         assert ui != null && parser != null && club != null
                 : "Application components must be initialized";
         LOGGER.info("ClubFlow initialized");
@@ -197,20 +207,27 @@ public class ClubFlow {
     public void run() {
         ui.welcome();
 
+        //@@author Bryan-chua
         try {
+            //@@author camimaigrot
             if (clubManager.initialize()) {
+                //@@author Bryan-chua
                 ui.print("Saved data loaded.");
             }
         } catch (IOException e) {
+            //@@author camimaigrot
             LOGGER.log(Level.WARNING, "Could not load club data", e);
+            //@@author Bryan-chua
             ui.print("Could not load saved data: " + e.getMessage());
             return;
         }
 
+        //@@author
         LOGGER.info("ClubFlow started");
         while (true) {
             try {
                 String input = ui.prompt();
+                //@@author Bryan-chua
                 Optional<String> suggestion = parser.suggestedCorrection(input);
 
                 if (suggestion.isPresent()) {
@@ -222,16 +239,21 @@ public class ClubFlow {
                     }
                     input = correctedInput;
                 }
+                //@@author
                 boolean terminate = parser.parse(input);
                 
+                //@@author Bryan-chua
                 if (club.hasUnsavedChanges()) {
                     try {
+                        //@@author camimaigrot
                         clubManager.saveActiveClub();
+                    //@@author Bryan-chua
                     } catch (IOException e) {
                         LOGGER.log(Level.WARNING, "Autosave failed", e);
                         ui.print("Changes could not be saved: " + e.getMessage());
                     }
                 }
+                //@@author
                 if (terminate) {
                     LOGGER.info("ClubFlow exited normally");
                     break;

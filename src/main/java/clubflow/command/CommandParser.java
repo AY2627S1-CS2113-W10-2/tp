@@ -394,6 +394,7 @@ public class CommandParser {
         return commands.containsKey(keyword.toLowerCase());
     }
 
+    //@@author Bryan-chua
     /**
      * Calculates the min number of single-character edits needed to transform one string
      * into another.
@@ -427,12 +428,14 @@ public class CommandParser {
         return distances[source.length()][target.length()];
     }
 
+    //@@author Eugene3129
     /**
      * Suggests the closest command using its registered spelling while preserving the arguments.
      * 
      * @param input original command input
      * @return corrected input, or an empty optional if no unique match
      */
+    //@@author Bryan-chua
     public Optional<String> suggestedCorrection(String input) {
         if (input == null || input.isBlank()) {
             return Optional.empty();
@@ -488,6 +491,8 @@ public class CommandParser {
             return Optional.empty();
         }
 
+        //@@author Eugene3129
         return Optional.of(registeredKeywords.get(bestKeyword) + remainder);
     }
+//@@author
 }

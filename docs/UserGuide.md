@@ -356,16 +356,20 @@ To import another saved file into the **currently active club**, use
 and assignments; ClubFlow then attempts to save them to the active club's
 `club.cf` file. It does not switch clubs.
 
+<!-- @@author Bryan-chua -->
 * Paths are relative to the folder from which ClubFlow was started.
 * If autosaving fails, ClubFlow displays a warning and keeps the changes in memory.
   It retries after the next successfully processed command, including `exit`.
   If saving still fails during `exit`, the app closes and those changes may be lost.
+<!-- @@author -->
 * Saved events include their completion state. Older save files without this field load as not completed.
   Files saved with completion states require this version of ClubFlow or later.
 * Saved assignments refer to an event tag and a member index. Older save files without assignments still load.
 
+<!-- @@author Bryan-chua -->
 Example: `load p/saves/my-club.cf`
 
+<!-- @@author -->
 ### Photo storage and loading
 
 Saved photos are placed in a `photos/` directory alongside each club's
@@ -399,8 +403,10 @@ saves/
 
 ### Exiting: `exit`
 
+<!-- @@author Bryan-chua -->
 Closes ClubFlow after attempting to save any outstanding changes.
 
+<!-- @@author -->
 ## FAQ
 
 **Q**: How do I transfer my data to another computer?

@@ -22,11 +22,13 @@ import java.util.logging.Logger;
 import clubflow.event.EventAssignment;
 import clubflow.photo.Photo;
 
+//@@author Bryan-chua
 /**
  * Saves and loads club data as member, event, and assignment records in a UTF-8 text file.
  * Fields are separated by {@code |}, and a member's functions are separated by commas.
  */
 public class SaveLoadManager {
+    //@@author
     private static final Logger LOGGER = Logger.getLogger(SaveLoadManager.class.getName());
 
     //@@author 77chenchen
@@ -35,6 +37,7 @@ public class SaveLoadManager {
     }
     //@@author
 
+    //@@author Bryan-chua
     /** Creates a storage handler. */
     public SaveLoadManager() {
     }
@@ -48,8 +51,10 @@ public class SaveLoadManager {
      * @throws IOException if the directory or file cannot be written
      */
     public void save(Club data, Path path) throws IOException {
+        //@@author
         Objects.requireNonNull(data, "Club data must not be null");
         Objects.requireNonNull(path, "Save path must not be null");
+        //@@author Bryan-chua
         List<String> lines = new ArrayList<>();
 
         for (Member member : data.getMembers()) {
@@ -67,7 +72,9 @@ public class SaveLoadManager {
                     "EVENT", event.getTag(), event.getName(),
                     String.valueOf(event.getDate()), String.valueOf(event.getDeadline()),
                     String.valueOf(event.getBudget()), event.getVenue(), event.getLogistics(),
+                    //@@author
                     String.valueOf(event.isCompleted()));
+            //@@author Bryan-chua
             lines.add(eventLine);
         }
 
@@ -85,16 +92,19 @@ public class SaveLoadManager {
         }
         //@@author
 
+        //@@author Bryan-chua
         Path parent = path.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
         }
         Files.write(path, lines, StandardCharsets.UTF_8);
+        //@@author
         LOGGER.info(() -> "Saved " + lines.size() + " records to " + path);
 
         savePhotos(path, data);
     }
 
+    //@@author Bryan-chua
     /**
      * Reads and validates every record before returning the loaded club data.
      * An invalid file does not change the application's current data.
@@ -104,16 +114,20 @@ public class SaveLoadManager {
      * @throws IOException if the file cannot be read or contains an invalid record
      */
     public Club load(Path path) throws IOException {
+        //@@author
         Objects.requireNonNull(path, "Load path must not be null");
+        //@@author Bryan-chua
         Club loaded = new Club();
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         //@@author 77chenchen
         List<PendingAssignment> pendingAssignments = new ArrayList<>();
         //@@author
 
+        //@@author Eugene3129
         for (int lineIndex = 0; lineIndex < lines.size(); lineIndex++) {
             String line = lines.get(lineIndex);
             int lineNumber = lineIndex + 1;
+            //@@author Bryan-chua
             String[] fields = line.split("\\|", -1);
 
             if (fields[0].equals("MEMBER")) {
@@ -128,17 +142,23 @@ public class SaveLoadManager {
                 if (fields[1].isBlank() || (fields[2].isBlank() && fields[3].isBlank())) {
                     throw invalidRecord("member", lineNumber, null);
                 }
+                //@@author Eugene3129
                 try {
+                    //@@author Bryan-chua
                     Member member = new Member(fields[1], fields[2], fields[3], functions);
                     loaded.addMember(member);
+                //@@author Eugene3129
                 } catch (IllegalArgumentException | NullPointerException e) {
                     throw invalidRecord("member", lineNumber, e);
                 }
+            //@@author Bryan-chua
             } else if (fields[0].equals("EVENT")) {
+                //@@author Eugene3129
                 // Older files have eight fields and implicitly describe events that are not completed.
                 if (fields.length != 8 && fields.length != 9) {
                     throw invalidRecord("event", lineNumber, null);
                 }
+                //@@author Bryan-chua
                 if (fields[1].isBlank()) {
                     throw invalidRecord("event", lineNumber, null);
                 }
@@ -151,6 +171,7 @@ public class SaveLoadManager {
                         throw invalidRecord("event", lineNumber, null);
                     }
 
+                    //@@author Eugene3129
                     boolean completed = false;
                     if (fields.length == 9) {
                         if (!fields[8].equals("true") && !fields[8].equals("false")) {
@@ -158,13 +179,16 @@ public class SaveLoadManager {
                         }
                         completed = Boolean.parseBoolean(fields[8]);
                     }
+                    //@@author Bryan-chua
                     Event event = new Event(fields[1], fields[2], date, deadline, budget,
                             fields[6], fields[7], completed);
                     if (!loaded.addEvent(event)) {
                         throw new IOException("Duplicate event tag at line " + lineNumber);
                     }
+                //@@author Eugene3129
                 } catch (DateTimeParseException | IllegalArgumentException e) {
                     throw invalidRecord("event", lineNumber, e);
+                //@@author Bryan-chua
                 }
             //@@author 77chenchen
             } else if (fields[0].equals("ASSIGNMENT")) {
@@ -173,6 +197,7 @@ public class SaveLoadManager {
                 }
                 pendingAssignments.add(new PendingAssignment(fields, lineNumber));
             //@@author
+            //@@author Bryan-chua
             } else {
                 throw new IOException("Unknown record type at line " + lineNumber);
             }
@@ -200,6 +225,7 @@ public class SaveLoadManager {
         LOGGER.info(() -> "Loaded " + lines.size() + " records from " + path);
 
         loadPhotos(path, loaded);
+        //@@author Bryan-chua
         return loaded;
     }
 

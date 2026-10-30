@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+//@@author Bryan-chua
 /**
  * Tests command suggestions through the parser's public API without executing commands.
  */
@@ -45,6 +46,7 @@ class CommandCorrectionTest {
                 parser.suggestedCorrection("  INVTE  e/\"Christmas  Party\"  "));
     }
 
+    //@@author
     @Test
     void suggestedCorrection_camelCaseKeyword_preservesRegisteredSpellingAndArguments() {
         parser.register("deleteEvent", new DeleteEventCommand(ui, new Club()));
@@ -58,6 +60,7 @@ class CommandCorrectionTest {
         );
     }
 
+    //@@author Bryan-chua
     @Test
     void suggestedCorrection_exactKeywordOrAlias_needsNoCorrection() {
         assertAll(

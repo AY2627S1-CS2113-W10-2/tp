@@ -130,6 +130,7 @@ public class UserInterface {
     }
 
     //@@author czfray
+    //@@author Bryan-chua
     /**
      * Prints a block of text without the application prefix for easy copying.
      * 
@@ -139,6 +140,7 @@ public class UserInterface {
         System.out.println(Objects.requireNonNull(text, "Printed text must not be null"));
     }
 
+    //@@author czfray
     /**
      * Reads user's input on screen.
      * @return User's line input.
@@ -148,6 +150,7 @@ public class UserInterface {
         return scanner.nextLine();
     }
 
+    //@@author Bryan-chua
     /**
      * Confirms the corrected prompt
      * @param correctedInput Corrected input from user
@@ -166,4 +169,5 @@ public class UserInterface {
             }
         }
     }
+//@@author czfray
 }

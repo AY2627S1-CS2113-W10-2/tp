@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Objects;
 
+//@@author Bryan-chua
 /**
  * Generates a copyable invitation for an event selected by tag.
  */

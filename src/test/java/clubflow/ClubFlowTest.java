@@ -25,9 +25,11 @@ import org.junit.jupiter.api.io.TempDir;
  * Exercises application startup and command dispatch using complete terminal sessions.
  */
 class ClubFlowTest {
+    //@@author Bryan-chua
     @TempDir
     Path testDirectory;
 
+    //@@author
     private final InputStream originalInput = System.in;
     private final PrintStream originalOutput = System.out;
     private ByteArrayOutputStream output;
@@ -94,6 +96,7 @@ class ClubFlowTest {
     }
 
     //@@author
+    //@@author Bryan-chua
     @Test
     void run_saveCommand_reportsUnknownCommand() {
         String result = runSession("save\nexit\n");
@@ -107,7 +110,9 @@ class ClubFlowTest {
         String firstSession = runSession("ce e/MEETING n/Planning\nhelp c/ce\nexit\n");
 
         assertTrue(firstSession.contains("[CF] Created event: MEETING"));
+        //@@author
         assertTrue(firstSession.contains("Syntax of command \"createEvent\":"));
+        //@@author Bryan-chua
         assertFalse(firstSession.contains("Command syntax error"));
 
         String secondSession = runSession("ve e/MEETING\nexit\n");
@@ -265,6 +270,7 @@ class ClubFlowTest {
 
     //@@author
     @Test
+    //@@author Bryan-chua
     void run_completionAutosave_restoresStatusInANewSessionAndAllowsUnmarking() throws IOException {
         String savedSession = runSession("createEvent e/XMAS n/\"Christmas Party\" "
                 + "d/2026-12-25 by/2026-12-20 b/500 v/\"Main Hall\" l/Chairs\n"
@@ -279,6 +285,7 @@ class ClubFlowTest {
 
         assertAll(
                 () -> assertTrue(loadedSession.contains("[CF] Saved data loaded.")),
+                //@@author
                 () -> assertEquals(List.of("[CF]   Status:    Completed", "[CF]   Status:    Not completed"),
                         loadedSession.lines().filter(line -> line.contains("Status:")).toList()),
                 () -> assertTrue(loadedSession.contains("[CF] Marked event as not completed: XMAS")),
@@ -291,7 +298,9 @@ class ClubFlowTest {
                 () -> assertTrue(loadedSession.contains("[CF]   Logistics: Chairs")),
                 () -> assertTrue(loadedSession.contains("[CF] Goodbye!"))
         );
+        //@@author Bryan-chua
         assertFalse(new SaveLoadManager().load(saveFile).findEventByTag("XMAS").orElseThrow().isCompleted());
+    //@@author
     }
 
     //@@author Eugene3129
@@ -316,6 +325,7 @@ class ClubFlowTest {
     }
 
     //@@author
+    //@@author Bryan-chua
     @Test
     void run_separateInstances_restoreAutomaticallySavedData() {
         runSession("createEvent e/PRIVATE\ncreateMember n/Lucy t/lucy\nexit\n");
@@ -348,11 +358,14 @@ class ClubFlowTest {
     }
     //@@author Eugene3129
 
+    //@@author Bryan-chua
     @Test
     void run_correctedCommandConfirmed_executesOnceAndAutosaves() throws IOException {
         String result = runSession("creatEvent e/XMAS n/\"Christmas Party\"\n\nexit\n");
 
+        //@@author Eugene3129
         assertTrue(result.contains("Corrected prompt: createEvent e/XMAS n/\"Christmas Party\""));
+        //@@author Bryan-chua
         assertEquals(1, result.lines().filter(line -> line.contains("Created event: XMAS")).count());
         assertFalse(result.contains("Command syntax error"));
         Club saved = new SaveLoadManager().load(testDirectory.resolve("clubs.cf"));
@@ -409,6 +422,7 @@ class ClubFlowTest {
         assertFalse(result.contains("Created event:"));
     }
 
+    //@@author Eugene3129
     @Test
     void main_exitInput_startsAndStopsWithAssertionsEnabled() {
         System.setIn(new ByteArrayInputStream("exit\n".getBytes(StandardCharsets.UTF_8)));
@@ -430,7 +444,9 @@ class ClubFlowTest {
     private String runSession(String input) {
         output.reset();
         System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        //@@author Bryan-chua
         new ClubFlow(testDirectory.resolve("clubs.cf")).run();
+        //@@author
         return output.toString(StandardCharsets.UTF_8);
     }
 }
