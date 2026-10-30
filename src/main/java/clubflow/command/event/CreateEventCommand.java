@@ -50,14 +50,12 @@ public class CreateEventCommand extends Command {
         };
     }
 
-    //@@author Bryan-chua
     /**
      * Validates event details and rejects the field separator used by the save file format.
      *
      * @param args parsed event arguments
      * @throws CommandParseException if a required value, format, or separator is invalid
      */
-    //@@author Eugene3129
     @Override
     public void validateArgs(HashMap<String, String> args) throws CommandParseException {
         EventArgumentValidator.validate(args);

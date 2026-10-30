@@ -27,7 +27,6 @@ public class Club {
     /** Assignments refer to the actual objects, so deleting a preceding member cannot change their meaning. */
     private final List<EventAssignment> assignments = new ArrayList<>();
 
-    //@@author Bryan-chua
     /** Tracks whether there are any unsaved changes */
     private boolean unsavedChanges = false;
 
@@ -42,13 +41,12 @@ public class Club {
         unsavedChanges = true;
     }
 
-    //@@author Bryan-chua
+    //@@author
     /** Marks the current club data as saved */
     public void markSaved() {
         unsavedChanges = false;
     }
 
-    //@@author
     /**
      * Adds a member to the club.
      *
@@ -65,9 +63,7 @@ public class Club {
         members.add(member);
         assert members.size() == previousSize + 1 : "Adding a member must increase the member count";
         LOGGER.fine(() -> "Added member; member count is now " + members.size());
-        //@@author Bryan-chua
         unsavedChanges = true;
-    //@@author 77chenchen
     }
 
     //@@author Eugene3129
@@ -88,9 +84,7 @@ public class Club {
         events.add(event);
         assert events.size() == previousSize + 1 : "Adding an event must increase the event count";
         LOGGER.fine(() -> "Added event; event count is now " + events.size());
-        //@@author Bryan-chua
         unsavedChanges = true;
-        //@@author Eugene3129
         return true;
     }
 
@@ -104,8 +98,8 @@ public class Club {
         return List.copyOf(members);
     }
 
-    //@@author 77chenchen
 
+    //@@author 77chenchen
     /**
      * Finds a member using the one-based index shown by the member list.
      *
@@ -134,13 +128,10 @@ public class Club {
         assignments.removeIf(assignment -> assignment.getMember() == removedMember);
         assert members.size() == previousSize - 1 : "Removing a member must decrease the member count";
         LOGGER.fine(() -> "Removed member; member count is now " + members.size());
-        //@@author Bryan-chua
         unsavedChanges = true;
-        //@@author 77chenchen
         return Optional.of(removedMember);
     }
 
-    //@@author 77chenchen
     /**
      * Replaces a member after the caller has created and validated the replacement.
      * Assignments are transferred to the new immutable member object.
@@ -200,8 +191,8 @@ public class Club {
                 || member.getFunctions().stream()
                         .anyMatch(function -> function.toLowerCase(Locale.ROOT).contains(query));
     }
-    //@@author Eugene3129
 
+    //@@author Eugene3129
     /**
      * Returns a read-only snapshot of the club's events.
      * Later changes to Club are not reflected in the returned list.
@@ -260,9 +251,7 @@ public class Club {
         //@@author
         assert events.size() == previousSize : "Updating an event must preserve the event count";
         LOGGER.fine(() -> "Updated event: " + updatedEvent.getTag());
-        //@@author Bryan-chua
         unsavedChanges = true;
-        //@@author
         return true;
     }
 
@@ -285,9 +274,7 @@ public class Club {
         assert removed && events.size() == previousSize - 1
                 : "A found event must be removed exactly once";
         LOGGER.fine(() -> "Removed event; event count is now " + events.size());
-        //@@author Bryan-chua
         unsavedChanges = true;
-        //@@author Eugene3129
         return removed;
     }
 
@@ -364,9 +351,8 @@ public class Club {
     public List<EventAssignment> getAssignments() {
         return List.copyOf(assignments);
     }
-    //@@author
 
-    //@@author Bryan-chua
+    //@@author
     /**
      * Replaces this store's contents while keeping the same object shared by all commands.
      * Takes snapshots before clearing so replacing a store with itself preserves its contents.
@@ -374,35 +360,30 @@ public class Club {
      * @param loaded club data whose members and events should become current
      */
     public void replaceWith(Club loaded) {
-        //@@author Eugene3129
         Objects.requireNonNull(loaded, "Loaded club data must not be null");
-        //@@author Bryan-chua
         List<Member> loadedMembers = loaded.getMembers();
         List<Event> loadedEvents = loaded.getEvents();
         //@@author 77chenchen
         List<EventAssignment> loadedAssignments = loaded.getAssignments();
-        //@@author
 
-        //@@author Bryan-chua
+        //@@author
         members.clear();
         events.clear();
         //@@author 77chenchen
         assignments.clear();
-        //@@author
 
-        //@@author Bryan-chua
+        //@@author
         members.addAll(loadedMembers);
         events.addAll(loadedEvents);
         //@@author 77chenchen
         assignments.addAll(loadedAssignments);
         assert assignments.size() == loadedAssignments.size() : "All loaded assignments must be copied";
-        //@@author
 
+        //@@author
         assert members.size() == loadedMembers.size() : "All loaded members must be copied";
         assert events.size() == loadedEvents.size() : "All loaded events must be copied";
         LOGGER.info(() -> "Replaced club data with " + members.size() + " members and "
                 + events.size() + " events");
-        //@@author Bryan-chua
         unsavedChanges = true;
     }
 

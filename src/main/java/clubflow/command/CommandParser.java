@@ -244,8 +244,8 @@ public class CommandParser {
         Set<String> flagArgIds = Set.of(command.flagArgIds());
         //@@author 77chenchen
         Set<String> repeatableArgIds = Set.of(command.repeatableArgIds());
-        //@@author
 
+        //@@author
         for (String strArg : strArgs) {
             String[] arg = parseArg(strArg, flagArgIds);
             String argId = arg[0];
@@ -257,7 +257,7 @@ public class CommandParser {
                     continue;
                 }
                 throw new CommandParseException("Multiple arguments start with \"" + argId + "/\".");
-                //@@author
+            //@@author
             }
             args.put(argId, arg[1]);
             argIds.add(argId);
@@ -303,8 +303,8 @@ public class CommandParser {
             }
             throw new CommandParseException("Argument \"" + strArg + "\" is not a valid flag.");
         }
-        //@@author
 
+        //@@author
         if (strArg.indexOf(SLASH_CHAR) == -1) {
             if (flagArgIds.contains(lowercaseArg)) {
                 return new String[]{lowercaseArg, ""};
@@ -428,14 +428,12 @@ public class CommandParser {
         return distances[source.length()][target.length()];
     }
 
-    //@@author Eugene3129
     /**
      * Suggests the closest command using its registered spelling while preserving the arguments.
      * 
      * @param input original command input
      * @return corrected input, or an empty optional if no unique match
      */
-    //@@author Bryan-chua
     public Optional<String> suggestedCorrection(String input) {
         if (input == null || input.isBlank()) {
             return Optional.empty();
@@ -491,7 +489,6 @@ public class CommandParser {
             return Optional.empty();
         }
 
-        //@@author Eugene3129
         return Optional.of(registeredKeywords.get(bestKeyword) + remainder);
     }
 //@@author

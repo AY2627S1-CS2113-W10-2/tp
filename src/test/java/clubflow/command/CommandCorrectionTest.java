@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//@@author Bryan-chua
 /**
  * Tests command suggestions through the parser's public API without executing commands.
  */
@@ -22,6 +21,7 @@ class CommandCorrectionTest {
     private CommandParser parser;
     private UserInterface ui;
 
+    //@@author Bryan-chua
     @BeforeEach
     void setUp() {
         ui = new UserInterface("[TEST] ", "> ");
@@ -107,4 +107,5 @@ class CommandCorrectionTest {
 
         assertEquals(Optional.of("invite e/XMAS"), parser.suggestedCorrection("invate e/XMAS"));
     }
+//@@author
 }

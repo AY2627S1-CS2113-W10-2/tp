@@ -169,6 +169,28 @@ Commands share a single `Club` instance. When switching clubs, `ClubManager` loa
 
 ### Storage component
 
+Storage connects the shared in-memory `Club` to local files. Its main classes are
+[`SaveLoadManager`](../src/main/java/clubflow/SaveLoadManager.java) and
+[`ClubManager`](../src/main/java/clubflow/ClubManager.java).
+
+| Class | Responsibility |
+| --- | --- |
+| `SaveLoadManager` | Serialises club records, validates and reconstructs loaded data, and synchronises photo directories. |
+| `ClubManager` | Selects each club's save path, initialises the default club, migrates legacy data, and coordinates saving and switching clubs. |
+| `LoadCommand` | Imports a user-selected file into the active club without changing the active club ID. |
+
+`ClubFlow` triggers automatic saving through `ClubManager`, while `LoadCommand`
+uses `SaveLoadManager` to read an import. Loaded records are assembled in a
+separate `Club` before `replaceWith()` updates the shared model. Keeping the
+shared object allows existing commands to continue using the newly loaded data.
+
+Each club's records are stored at `saves/clubs/<club-id>/club.cf`, with saved
+photos in the adjacent `photos/` directory. Relative paths are resolved from the
+application's working directory. Storage reports I/O failures to its callers;
+the application or command displays the corresponding message through the UI.
+See [Autosave, import, and file format](#autosave-import-and-file-format) for the
+record format and [Photo persistence](#photo-persistence) for photo handling.
+
 ### Common classes
 
 Shared command infrastructure and utilities are located in `clubflow.command`, while application exceptions are grouped under `clubflow.exception`.
@@ -403,6 +425,103 @@ switches. It also means only one club is loaded into the shared model at a
 time.
 
 ### Autosave, import, and file format
+
+#### Automatic saving and startup loading
+
+Mutating operations on `Club` set its `unsavedChanges` flag. After
+`CommandParser.parse()` returns normally, `ClubFlow.run()` checks this flag and
+calls `ClubManager.saveActiveClub()` when needed. The manager delegates to
+`SaveLoadManager.save()` and calls `markSaved()` only after saving records and
+photos succeeds. The command's return value controls termination, not saving;
+the save attempt occurs before handling an `exit` request.
+
+If saving throws `IOException`, the application logs the failure, displays
+`Changes could not be saved:`, and retains the modified in-memory data and
+unsaved flag. A later normally processed command retries saving, including a
+read-only command or `exit`. An invalid command or cancelled correction does
+not reach this save step. Exiting after another failed save still terminates
+the application, so changes that were never saved can be lost.
+
+At startup, `ClubManager.initialize()` loads `default`. It first migrates the
+legacy `saves/clubs.cf` file and its photos when the new default save is absent;
+otherwise, a missing default save is created as an empty file. An unreadable or
+invalid startup save causes `ClubFlow` to report the error and stop before the
+command loop, rather than overwrite it with empty data.
+
+#### Importing a saved club
+
+[`LoadCommand`](../src/main/java/clubflow/command/LoadCommand.java) implements
+`load p/PATH`. Validation requires a non-blank, syntactically valid relative
+path. `SaveLoadManager.load()` reads UTF-8 records into a temporary `Club`,
+checks the records and relationships, and restores photos from a `photos/`
+directory beside the source file. Assignments are resolved after members and
+events have been read.
+
+Only after loading returns successfully does the command call
+`club.replaceWith(loaded)`. This replaces the current records rather than
+merging them, retains the active club ID, and marks the shared data as unsaved.
+The input loop then attempts to save the imported data to the active club's
+normal location. Importing does not select the source file as a new autosave
+destination; when it differs from the active save file, it is left unchanged.
+
+An I/O or record-validation failure displays `Data not loaded!` and leaves the
+current in-memory records in place. Invalid records include a line number in
+their error message. Photo-cache operations involve separate filesystem changes;
+the import is not a transaction covering both records and every photo operation.
+
+#### Text record format
+
+`SaveLoadManager.save()` creates parent directories as needed and replaces the
+UTF-8 text file. It writes members first, then events, then assignments, with
+one record per line:
+
+```text
+MEMBER|NAME|TELEGRAM|EMAIL|FUNCTIONS
+EVENT|TAG|NAME|DATE|DEADLINE|BUDGET|VENUE|LOGISTICS|COMPLETED
+ASSIGNMENT|EVENT_TAG|MEMBER_INDEX|ROLE
+```
+
+* `|` separates fields. The parser preserves empty trailing fields using
+  `split("\\|", -1)`. There is no field-escaping mechanism, so member and event
+  input rejects `|`; assignment roles also reject it and line breaks.
+* A member record has five fields. At least one contact is required. Functions
+  are comma-separated; an empty field means no functions. Individual function
+  names cannot be blank or contain commas.
+* An event record has nine fields. Dates use `YYYY-MM-DD`, with the literal
+  `null` for an unset date or deadline. Budgets must be finite and non-negative;
+  completion is exactly `true` or `false`. Tags must be non-blank and unique
+  within the loaded club, ignoring case. Optional text can be empty.
+* Older eight-field event records omit completion and load as not completed.
+  Saving writes the current nine-field format.
+* An assignment record has four fields. Its member index is one-based in the
+  saved member order, and its event tag must identify an existing event.
+  The role may be empty. Invalid references and duplicate assignments are rejected.
+* Unknown record types and incorrect field counts are rejected. An empty file
+  represents an empty club; blank lines are not ignored.
+
+For example, these records restore Alice, a completed event, and her event role:
+
+```text
+MEMBER|Alice|alice||Logistics
+EVENT|CAMP|Welcome Camp|2026-12-25|null|100.0|Main Hall||true
+ASSIGNMENT|CAMP|1|Lead Host
+```
+
+#### Design considerations and limits
+
+A readable text format avoids a database dependency and makes small saves easy
+to inspect. Its tradeoff is the delimiter restrictions and the need to update
+serialization, validation, and compatibility handling together when adding fields.
+The unsaved flag avoids rewriting data after every read-only command while
+allowing retries after a failed save.
+
+The text file is written directly with `Files.write()`, without an atomic
+temporary-file replacement. A failed write may therefore leave a partial file.
+Photos are synchronised after the text write, so a photo failure can occur after
+records have already been saved. The unsaved flag remains set in that case,
+but records and photos are not committed as one atomic operation. The
+[manual tests](#import-and-invalid-save-files) cover rejected imports and startup
+failures; [autosave recovery tests](#autosave-failure-and-recovery) cover retries.
 
 ### Photo lifecycle and persistence limits
 

@@ -13,15 +13,12 @@ import clubflow.UserInterface;
 import clubflow.SaveLoadManager;
 import clubflow.exception.CommandParseException;
 
-//@@author Bryan-chua
 /**
  * Loads club data from a user-supplied relative path into the shared data store.
  */
 public class LoadCommand extends Command {
-    //@@author
     private static final Logger LOGGER = Logger.getLogger(LoadCommand.class.getName());
 
-    //@@author Bryan-chua
     /** Club data shared with the other commands. */
     private final Club club;
 
@@ -34,9 +31,7 @@ public class LoadCommand extends Command {
     public LoadCommand(UserInterface ui, Club club) {
         super(ui);
         this.club = Objects.requireNonNull(club, "Club data must not be null");
-        //@@author
         addSyntax("p/Path");
-    //@@author Bryan-chua
     }
 
     @Override 
@@ -49,6 +44,7 @@ public class LoadCommand extends Command {
         return new String[]{};
     }
 
+    //@@author Bryan-chua
     /**
      * Checks that the required {@code p/} argument names a valid relative path.
      *
@@ -71,6 +67,7 @@ public class LoadCommand extends Command {
         }
     }
 
+    //@@author
     /**
      * Replaces the shared club data only after the file has loaded successfully.
      *
@@ -79,10 +76,8 @@ public class LoadCommand extends Command {
      */
     @Override 
     public boolean execute(HashMap<String, String> args) {
-        //@@author
         Objects.requireNonNull(args, "Arguments must not be null");
         assert args.containsKey("p") : "Validated arguments must contain a load path";
-        //@@author Bryan-chua
         String pathString = args.get("p");
         Path path = Path.of(pathString);
 
@@ -91,9 +86,7 @@ public class LoadCommand extends Command {
             club.replaceWith(loaded);
             ui.print("Data loaded successfully!");
         } catch (IOException e) {
-            //@@author
             LOGGER.log(Level.WARNING, "Could not load club data from " + path, e);
-            //@@author Bryan-chua
             ui.print("Data not loaded! " + e.getMessage());
         }
 

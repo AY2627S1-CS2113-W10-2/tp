@@ -21,6 +21,30 @@ Command names and argument prefixes ignore case. Enclose values containing space
 Square brackets in the formats below indicate optional arguments; do not type the brackets.
 Enter `help` to list command formats, or `help c/findMember` to see one command's formats and aliases.
 
+### Correcting a misspelled command
+
+If you mistype a command name, ClubFlow may suggest the closest matching command.
+For example, entering `invte e/XMAS` displays:
+
+```text
+Corrected prompt: invite e/XMAS
+Press <enter> if correct. Press 'c' and <enter> to cancel.
+```
+
+* Press **Enter** without typing anything to accept and execute the corrected command.
+* Type **`c`** and press **Enter** to cancel. ClubFlow displays `Command cancelled.`
+  and returns to the command prompt without executing that command. Uppercase `C` also works.
+* Any other response repeats the confirmation prompt. To enter a different command,
+  cancel the suggestion first.
+* The suggestion changes only the command name; your arguments, including quoted
+  values, are preserved. Accepted commands still undergo normal argument validation.
+* Correctly spelled commands and aliases run without a correction prompt.
+* Suggestions are available only for unknown command names of at least four characters.
+  Four- or five-character names allow one character insertion, deletion, or replacement;
+  longer names allow up to two. Aliases are excluded as suggestion candidates.
+* If there is no sufficiently close match, or multiple commands are equally close,
+  ClubFlow reports an unknown command instead of offering a suggestion.
+
 ### Managing multiple clubs
 
 Each club has its own events, members, assignments, and photos. On every launch,
@@ -125,6 +149,33 @@ An unknown tag displays `Event not found: TAG`.
 Format: `viewEvent e/TAG` or `viewEvent all`
 
 Example: `viewEvent e/XMAS`
+
+### Generating an event invitation: `invite`
+
+Generates a copyable text invitation using an event's name, date, and venue.
+The event must exist in the active club. Event tag matching ignores case.
+
+Format: `invite e/TAG`
+
+Example: After creating an event with
+`createEvent e/XMAS n/"Christmas Party" d/2026-12-25 v/"Main Hall"`,
+enter `invite e/XMAS` to display:
+
+```text
+You're invited to: Christmas Party!
+
+Date: 2026-12-25
+Location: Main Hall
+
+Join us and have some fun!
+```
+
+* The invitation is printed without the `[CF]` prefix so you can copy and share it.
+* Missing details appear as `[Add event name]`, `[Add date]`, or `[Add venue]`.
+  You can fill these in after copying the text, or edit the event and generate it again.
+* An unknown tag displays `Event not found: TAG` and produces no invitation.
+* Generating an invitation leaves the event unchanged. Copy the text into your
+  preferred messaging application to send it; ClubFlow does not send it automatically.
 
 ### Marking and unmarking completion: `mark` and `unmark`
 
@@ -320,12 +371,12 @@ Examples: `listPhoto` and `listPhoto e/XMAS`
 
 ### Opening photos: `openPhoto`
 
-Opens photos belonging to an event using the system's default image viewer.
+Opens an event's photo folder or a specific photo.
 
 Format: `openPhoto e/TAG` or `openPhoto e/TAG n/NAME`
 
-* Without `n/`, opens the photos belonging to the specified event.
-* With `n/NAME`, opens only the specified photo.
+* Without `n/`, opens the event's photo folder in the system's default file explorer.
+* With `n/NAME`, opens only the specified photo in the system's default image viewer.
 
 Examples: `openPhoto e/XMAS` and `openPhoto e/XMAS n/GroupPhoto`
 
@@ -356,20 +407,16 @@ To import another saved file into the **currently active club**, use
 and assignments; ClubFlow then attempts to save them to the active club's
 `club.cf` file. It does not switch clubs.
 
-<!-- @@author Bryan-chua -->
 * Paths are relative to the folder from which ClubFlow was started.
 * If autosaving fails, ClubFlow displays a warning and keeps the changes in memory.
   It retries after the next successfully processed command, including `exit`.
   If saving still fails during `exit`, the app closes and those changes may be lost.
-<!-- @@author -->
 * Saved events include their completion state. Older save files without this field load as not completed.
   Files saved with completion states require this version of ClubFlow or later.
 * Saved assignments refer to an event tag and a member index. Older save files without assignments still load.
 
-<!-- @@author Bryan-chua -->
 Example: `load p/saves/my-club.cf`
 
-<!-- @@author -->
 ### Photo storage and loading
 
 Saved photos are placed in a `photos/` directory alongside each club's
@@ -403,10 +450,8 @@ saves/
 
 ### Exiting: `exit`
 
-<!-- @@author Bryan-chua -->
 Closes ClubFlow after attempting to save any outstanding changes.
 
-<!-- @@author -->
 ## FAQ
 
 **Q**: How do I transfer my data to another computer?
@@ -426,6 +471,7 @@ loads `default` at startup; use `switchClub n/CLUB_ID` to access other clubs.
 * Create event `createEvent e/TAG [n/NAME] [d/DATE] [by/DEADLINE] [b/BUDGET] [v/VENUE] [l/LOGISTICS]` (alias `ce`)
 * Edit event `editEvent e/TAG [n/NAME] [d/DATE] [by/DEADLINE] [b/BUDGET] [v/VENUE] [l/LOGISTICS]` (alias `ee`)
 * View event `viewEvent e/TAG` or view all events `viewEvent all` (alias `ve`)
+* Generate an event invitation `invite e/TAG`
 * Mark event completed `mark e/TAG`
 * Mark event not completed `unmark e/TAG`
 * Delete event `deleteEvent e/TAG` (alias `de`)

@@ -129,7 +129,6 @@ public class UserInterface {
         System.out.println(printPrefix + INDENT.repeat(indentLevel) + message);
     }
 
-    //@@author czfray
     //@@author Bryan-chua
     /**
      * Prints a block of text without the application prefix for easy copying.

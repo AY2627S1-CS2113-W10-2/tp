@@ -11,8 +11,8 @@ import clubflow.UserInterface;
 import clubflow.exception.CommandParseException;
 import clubflow.member.Member;
 
-//@@author 77chenchen
 
+//@@author 77chenchen
 /**
  * Creates a club member and stores the member in the shared club data.
  */
@@ -50,7 +50,6 @@ public class CreateMemberCommand extends Command {
         return new String[]{MemberArgumentIds.FUNCTION};
     }
 
-    //@@author Bryan-chua
     /**
      * Validates member details and rejects characters reserved by the save file format.
      * Commas are allowed in ordinary fields but not in function names.
@@ -58,7 +57,6 @@ public class CreateMemberCommand extends Command {
      * @param args parsed member arguments
      * @throws CommandParseException if a required value or file-format constraint is invalid
      */
-    //@@author 77chenchen
     @Override
     public void validateArgs(HashMap<String, String> args) throws CommandParseException {
         if (args.get(MemberArgumentIds.NAME).isBlank()) {
@@ -108,5 +106,3 @@ public class CreateMemberCommand extends Command {
         return false;
     }
 }
-
-//@@author
