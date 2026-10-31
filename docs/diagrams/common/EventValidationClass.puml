@@ -17,7 +17,8 @@ class CreateEventCommand
 class EditEventCommand
 class EventArgumentValidator
 
-CommandParser --> "0..*" Command : dispatches >
+' Padding moves the multiplicity away from the arrowhead.
+CommandParser --> "0..*  " Command : dispatches >
 Command <|-- CreateEventCommand
 Command <|-- EditEventCommand
 CreateEventCommand ..> EventArgumentValidator : validates with >

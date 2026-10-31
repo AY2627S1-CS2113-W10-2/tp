@@ -20,3 +20,6 @@ java -jar "<path-to-plantuml.jar>" -tsvg "docs/diagrams/**/*.puml"
 New diagrams should include `../shared/UmlStyle.iuml`. In the Developer Guide,
 set each image's width to its SVG width in pixels divided by 16, in `em`, so
 diagram labels match the body text. Update image and source links when moving files.
+
+Spaces inside quoted multiplicities intentionally offset their labels. Preserve
+them and check regenerated SVGs for collisions with all nearby lines and arrowheads.
