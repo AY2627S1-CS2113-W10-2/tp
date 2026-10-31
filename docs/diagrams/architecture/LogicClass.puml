@@ -33,7 +33,8 @@ class UserInterface {
 }
 
 ClubFlow *-- CommandParser
-CommandParser --> "0..*" Command : dispatches >
+' Padding moves the multiplicity away from the arrowhead.
+CommandParser --> "0..*  " Command : dispatches >
 Command <|-- FindMemberCommand
 Command <|-- XYZCommand
 FindMemberCommand --> Club : searches >

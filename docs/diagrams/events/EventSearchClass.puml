@@ -23,6 +23,7 @@ class Event
 
 FindEventCommand --> EventSearch : delegates search >
 EventSearch --> Club : obtains snapshot >
-Club --> "0..*" Event : contains >
+' Padding moves the multiplicity away from the arrowhead.
+Club --> "0..*     " Event : contains >
 EventSearch ..> Event : tests predicates >
 @enduml

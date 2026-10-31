@@ -31,10 +31,11 @@ class EventAssignment {
 }
 class Photo
 
-Club "1" *-- "0..*" Event : contains >
-Club "1" *-- "0..*" Member : contains >
-Club "1" *-- "0..*" EventAssignment : records >
-EventAssignment "0..*" --> "1" Event : for event >
+' Padding moves multiplicities away from relationship lines and arrowheads.
+Club "1    " *-- "0..* " Event : contains >
+Club "1  " *-- "0..*        " Member : contains >
+Club "1  " *-- "0..* " EventAssignment : records >
+EventAssignment "0..*    " --> "1 " Event : for event >
 EventAssignment "0..*" --> "1" Member : for member >
-Event "1" *-- "0..*" Photo : stores >
+Event "1  " *-- "0..* " Photo : stores >
 @enduml
